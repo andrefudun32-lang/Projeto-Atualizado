@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Denuncia Pelotas - Sua Cidade Melhor</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <link rel="stylesheet" href="../css/inicial.css">
+    <link rel="stylesheet" href="../css/dark-mode.css">
+</head>
+<body>
+    <div class="nav-buttons" style="position: absolute; top: 20px; left: 20px; z-index: 1000;">
+    <button onclick="window.location.href='inicial-logado.html'" style="padding: 10px 15px; border-radius: 5px; border: none; background: #ff8c00; color: white; cursor: pointer; font-weight: bold; margin-right: 10px;">
+        🏠 Início
+    </button>
+    <button onclick="window.history.back()" style="padding: 10px 15px; border-radius: 5px; border: none; background: rgba(255,255,255,0.2); color: white; cursor: pointer; backdrop-filter: blur(5px);">
+        ⬅️ Voltar
+    </button>
+</div>
+    <header class="header"> 
+        <h1 class="site-title">
+            <img src="../imagens/logo.png" alt="Logo Denuncia Pelotas" class="logo">
+            Denuncia Pelotas
+        </h1>
+        
+        <nav class="nav-buttons">
+            <a href="../html/denuncias.html" class="btn btn-ghost trava-cadastro">
+                <i class="fas fa-eye icon-left"></i> Ver Denúncias
+            </a>
+            <a href="../html/login.html" class="btn btn-filled login">
+                <i class="fas fa-sign-in-alt icon-left"></i> Fazer Login
+            </a>
+        </nav>
+    </header> 
+
+    <section class="hero-section">
+        <div class="hero-content">
+            <h2>Construindo uma Pelotas Melhor, Juntos</h2>
+            <p>Seu canal direto para registrar e acompanhar denúncias sobre infraestrutura, segurança, limpeza urbana e muito mais. Sua voz faz a diferença na transformação da nossa cidade!</p>
+            <div class="hero-actions">
+                <a href="../html/fazer-denuncia-login.html" class="btn btn-filled hero-btn">
+                    <i class="fas fa-plus-circle icon-left"></i> Fazer Denúncia
+                </a>
+                <a href="../html/denuncias.html" class="btn btn-ghost hero-btn trava-cadastro">
+                    <i class="fas fa-search icon-left"></i> Ver Denúncias
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <main class="main-content">
+        <h2>Como Funciona?</h2>
+        <p>Nosso portal simplifica o processo de relatar problemas na cidade. Você pode descrever a ocorrência, adicionar fotos e acompanhar o status da sua denúncia, tudo de forma transparente e eficiente.</p>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-mobile-alt"></i></div>
+                <h3>Fácil de Usar</h3>
+                <p>Interface intuitiva que funciona perfeitamente no celular e computador</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-camera"></i></div>
+                <h3>Fotos e Evidências</h3>
+                <p>Adicione fotos para documentar melhor o problema relatado</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+                <h3>Acompanhamento</h3>
+                <p>Monitore o status da sua denúncia em tempo real</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+                <h3>Seguro e Confidencial</h3>
+                <p>Suas informações são protegidas e você pode denunciar anonimamente</p>
+            </div>
+        </div>
+
+        <div class="categories-section">
+            <h3>Tipos de Denúncias que Atendemos</h3>
+            <div class="categories-grid">
+                <div class="category-item"><i class="fas fa-road"></i><span>Infraestrutura</span></div>
+                <div class="category-item"><i class="fas fa-lightbulb"></i><span>Iluminação</span></div>
+                <div class="category-item"><i class="fas fa-trash"></i><span>Limpeza</span></div>
+                <div class="category-item"><i class="fas fa-car"></i><span>Trânsito</span></div>
+                <div class="category-item"><i class="fas fa-tree"></i><span>Meio Ambiente</span></div>
+                <div class="category-item"><i class="fas fa-shield-alt"></i><span>Segurança</span></div>
+            </div>
+        </div>
+
+        <div class="cta-section">
+            <h3>Pronto para fazer a diferença?</h3>
+            <p>Junte-se aos cidadãos que estão transformando Pelotas</p>
+            <div class="cta-buttons">
+                <a href="../html/cadastro.html" class="btn btn-filled">
+                    <i class="fas fa-plus icon-left"></i> Fazer Minha Primeira Denúncia
+                </a>
+                <a href="../html/cadastro.html" class="btn btn-ghost">
+                    <i class="fas fa-user icon-left"></i> Criar Conta
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Denuncia Pelotas</h4>
+                <p>Transformando nossa cidade através da participação cívica</p>
+            </div>
+            <div class="footer-section">
+                <h4>Links Úteis</h4>
+                <ul>
+                    <li><a href="#">Sobre Nós</a></li>
+                    <li><a href="#">Como Funciona</a></li>
+                    <li><a href="#">Política de Privacidade</a></li>
+                    <li><a href="#">Termos de Uso</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Contato</h4>
+                <ul>
+                    <li><i class="fas fa-envelope"></i> contato@denunciapelotas.com</li>
+                    <li><i class="fas fa-phone"></i> (53) 3225-1234</li>
+                    <li><i class="fas fa-map-marker-alt"></i> Pelotas, RS</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Denuncia Pelotas. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="../js/dark-mode.js"></script>
+    <script>
+        // Função original mantida
+        function acessarMinhasDenuncias() {
+            window.location.href = "../html/denuncias.html";
+        }
+
+        // NOVO SCRIPT PARA O ALERTA E REDIRECIONAMENTO
+        document.querySelectorAll('.trava-cadastro').forEach(botao => {
+            botao.addEventListener('click', function(event) {
+                event.preventDefault(); // Impede o link de abrir a página de denúncias
+                alert("Realize o cadastro primeiro para poder ver as denuncias registradas");
+                window.location.href = "../html/cadastro.html"; // Manda para o cadastro
+            });
+        });
+    </script>
+</body>
+</html>

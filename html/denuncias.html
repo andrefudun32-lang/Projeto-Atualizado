@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Matriz de Dados - Denúncias Pelotas</title>
+  
+  <!-- Fonte e ícones -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="../css/registros-denuncias.css">
+  <link rel="stylesheet" href="../css/dark-mode.css">
+</head>
+<body>
+  <div class="nav-buttons" style="position: absolute; top: 20px; left: 20px; z-index: 1000;">
+    <button onclick="window.location.href='inicial.html'" style="padding: 10px 15px; border-radius: 5px; border: none; background: #ff8c00; color: white; cursor: pointer; font-weight: bold; margin-right: 10px;">
+        🏠 Início
+    </button>
+    <button onclick="window.history.back()" style="padding: 10px 15px; border-radius: 5px; border: none; background: rgba(255,255,255,0.2); color: white; cursor: pointer; backdrop-filter: blur(5px);">
+        ⬅️ Voltar
+    </button>
+</div>
+  <header class="header">
+    <h1 class="site-title">Denúncias Pelotas</h1>
+    <nav class="nav-buttons">
+      <a href="../html/fazer-denuncia.html" class="btn btn-ghost"><i class="fas fa-plus icon-left"></i> Nova denúncia</a>
+      <a href="../html/inicial-logado.html" class="btn btn-ghost"><i class="fas fa-home icon-left"></i> Início</a>
+    </nav>
+  </header>
+
+  <main class="main-content">
+    <h2>Denúncias Registradas</h2>
+    <p>Aqui estão todas as denúncias cadastradas no sistema.</p>
+
+    <div class="table-container">
+      <table id="tabelaDenuncias" class="denuncias-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Tipo</th>
+            <th>Endereço</th>
+            <th>Referência</th>
+            <th>Descrição</th>
+            <th>Status</th>
+            <th>Usuário</th>
+            <th>Foto</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- As denúncias do banco serão inseridas aqui pelo JS -->
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2025 Denúncias Pelotas. Todos os direitos reservados.</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../js/dark-mode.js"></script>
+  <script src="../js/denuncias.js"></script>
+</body>
+</html>

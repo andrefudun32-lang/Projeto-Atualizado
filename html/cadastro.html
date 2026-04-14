@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro - Denúncia Pelotas</title>
+    <link rel="stylesheet" href="../css/cadastro.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+    <div class="nav-buttons" style="position: absolute; top: 20px; left: 20px; z-index: 1000;">
+    <button onclick="window.location.href='inicial.html'" style="padding: 10px 15px; border-radius: 5px; border: none; background: #ff8c00; color: white; cursor: pointer; font-weight: bold; margin-right: 10px;">
+        🏠 Início
+    </button>
+    <button onclick="window.history.back()" style="padding: 10px 15px; border-radius: 5px; border: none; background: rgba(255,255,255,0.2); color: white; cursor: pointer; backdrop-filter: blur(5px);">
+        ⬅️ Voltar
+    </button>
+</div>
+    <div class="cadastro-container">
+        <form id="formCadastro">
+            <h2>Cadastro</h2>
+            
+            <div class="input-box">
+                <input type="text" id="nome" placeholder="Nome Completo" required>
+            </div>
+
+            <div class="input-box">
+                <input type="email" id="email" placeholder="E-mail" required>
+            </div>
+
+            <div class="input-box">
+                <input type="password" id="senha" placeholder="Senha" required>
+            </div>
+
+            <div class="input-box select-box">
+                <select id="tipo" required>
+                    <option value="" disabled selected>Tipo de Usuário</option>
+                    <option value="user">Cidadão</option>
+                    <option value="admin">Prefeitura (Admin)</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn-cadastro-submit">Cadastrar</button>
+            
+            <div class="login-link">
+                <p>Já tem uma conta? <a href="login.html">Fazer Login</a></p>
+            </div>
+        </form>
+    </div>
+
+    <script src="../js/cadastro.js"></script>
+</body>
+</html>

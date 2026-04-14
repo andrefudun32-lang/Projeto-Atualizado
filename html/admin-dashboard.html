@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Administrativo - Sistema de Denúncias</title>
+    <link rel="stylesheet" href="../css/admin-dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="admin-container">
+        <header class="admin-header">
+            <div class="header-content">
+                <h1><i class="fas fa-shield-alt"></i> Painel Administrativo</h1>
+                <div class="user-info">
+                    <span id="adminName">Admin</span>
+                    <button onclick="logout()" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i> Sair
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <div class="admin-content">
+            <aside class="sidebar">
+                <nav class="admin-nav">
+                    <a href="#" class="nav-item active" onclick="showSection('dashboard')">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </a>
+                    <a href="#" class="nav-item" onclick="showSection('denuncias')">
+                        <i class="fas fa-exclamation-triangle"></i> Gerenciar Denúncias
+                    </a>
+                    <a href="#" class="nav-item" onclick="showSection('filtros')">
+                        <i class="fas fa-filter"></i> Filtros
+                    </a>
+                    <a href="#" class="nav-item" onclick="showSection('estatisticas')">
+                        <i class="fas fa-chart-bar"></i> Estatísticas
+                    </a>
+                </nav>
+            </aside>
+
+            <main class="main-content">
+                // Dashboard Section
+                <div id="dashboard" class="content-section active">
+                    <h2>Dashboard</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="totalDenuncias">0</h3>
+                                <p>Total de Denúncias</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon pending">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="denunciasPendentes">0</h3>
+                                <p>Pendentes</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon progress">
+                                <i class="fas fa-cog"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="denunciasEmAndamento">0</h3>
+                                <p>Em Andamento</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon resolved">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="denunciasResolvidas">0</h3>
+                                <p>Resolvidas</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                // Denúncias Section
+                <div id="denuncias" class="content-section">
+                    <div class="section-header">
+                        <h2>Gerenciar Denúncias</h2>
+                        <div class="action-buttons">
+                            <button onclick="refreshDenuncias()" class="btn btn-secondary">
+                                <i class="fas fa-sync-alt"></i> Atualizar
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="denuncias-table-container">
+                        <table class="denuncias-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Tipo</th>
+                                    <th>Endereço</th>
+                                    <th>Status</th>
+                                    <th>Prioridade</th>
+                                    <th>Data</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="denunciasTableBody">
+                                <tr>
+                                    <td colspan="7" class="loading">Carregando denúncias...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                // Filtros Section
+                <div id="filtros" class="content-section">
+                    <h2>Filtros</h2>
+                    <div class="filters-container">
+                        <div class="filter-group">
+                            <label for="statusFilter">Status:</label>
+                            <select id="statusFilter" onchange="filterByStatus()">
+                                <option value="">Todos os Status</option>
+                                <option value="Pendente">Pendente</option>
+                                <option value="Em Andamento">Em Andamento</option>
+                                <option value="Resolvida">Resolvida</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="tipoFilter">Tipo:</label>
+                            <select id="tipoFilter" onchange="filterByTipo()">
+                                <option value="">Todos os Tipos</option>
+                                <option value="Buraco na Via">Buraco na Via</option>
+                                <option value="Iluminação Pública">Iluminação Pública</option>
+                                <option value="Acúmulo de Lixo">Acúmulo de Lixo</option>
+                                <option value="Sinalização">Sinalização</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="prioridadeFilter">Prioridade:</label>
+                            <select id="prioridadeFilter" onchange="filterByPrioridade()">
+                                <option value="">Todas as Prioridades</option>
+                                <option value="Baixa">Baixa</option>
+                                <option value="Media">Média</option>
+                                <option value="Alta">Alta</option>
+                                <option value="Urgente">Urgente</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                // Estatísticas Section
+                <div id="estatisticas" class="content-section">
+                    <h2>Estatísticas</h2>
+                    <div class="charts-container">
+                        <div class="chart-card">
+                            <h3>Denúncias por Tipo</h3>
+                            <div class="chart-container">
+                                <canvas id="tipoChart" width="400" height="300"></canvas>
+                            </div>
+                        </div>
+                        <div class="chart-card">
+                            <h3>Denúncias por Mês</h3>
+                            <div class="chart-container">
+                                <canvas id="mesChart" width="400" height="300"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    // Modal para Gerenciar Denúncia
+    <div id="denunciaModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Gerenciar Denúncia</h3>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="denuncia-details">
+                    <div class="detail-group">
+                        <label>ID:</label>
+                        <span id="modalDenunciaId">-</span>
+                    </div>
+                    <div class="detail-group">
+                        <label>Tipo:</label>
+                        <span id="modalDenunciaTipo">-</span>
+                    </div>
+                    <div class="detail-group">
+                        <label>Endereço:</label>
+                        <span id="modalDenunciaEndereco">-</span>
+                    </div>
+                    <div class="detail-group">
+                        <label>Descrição:</label>
+                        <p id="modalDenunciaDescricao">-</p>
+                    </div>
+                </div>
+
+                <div class="admin-actions">
+                    <div class="action-group">
+                        <label for="statusSelect">Status:</label>
+                        <select id="statusSelect">
+                            <option value="Pendente">Pendente</option>
+                            <option value="Em Andamento">Em Andamento</option>
+                            <option value="Resolvida">Resolvida</option>
+                        </select>
+                        <button onclick="updateStatus()" class="btn btn-primary">Atualizar Status</button>
+                    </div>
+
+                    <div class="action-group">
+                        <label for="prioridadeSelect">Prioridade:</label>
+                        <select id="prioridadeSelect">
+                            <option value="Baixa">Baixa</option>
+                            <option value="Media">Média</option>
+                            <option value="Alta">Alta</option>
+                            <option value="Urgente">Urgente</option>
+                        </select>
+                        <button onclick="updatePrioridade()" class="btn btn-primary">Definir Prioridade</button>
+                    </div>
+
+                    <div class="action-group">
+                        <label for="comentarioInput">Adicionar Comentário:</label>
+                        <textarea id="comentarioInput" placeholder="Digite um comentário..."></textarea>
+                        <button onclick="addComentario()" class="btn btn-secondary">Adicionar Comentário</button>
+                    </div>
+
+                    <div class="action-group">
+                        <button onclick="deleteDenuncia()" class="btn btn-danger">
+                            <i class="fas fa-trash"></i> Excluir Denúncia
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../js/admin-dashboard.js"></script>
+</body>
+</html>

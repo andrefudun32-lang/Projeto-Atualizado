@@ -1,0 +1,133 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: url('../imagens/cidade.png');
+    background-size: cover;
+    background-position: center;
+    color: #fff;
+}
+
+.cadastro-container {
+    width: 420px;
+    background-color: rgba(255, 165, 0, 0.15);
+    border: 2px solid rgba(255, 255, 255, .3);
+    border-radius: 20px;
+    padding: 40px 60px;
+    box-shadow: 0 0 40px rgba(0, 0, 0, .6);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-sizing: border-box;
+}
+
+.cadastro-container h2 {
+    font-size: 2.5em;
+    color: #bd5b00;
+    text-align: center;
+    margin-bottom: 20px;
+    text-shadow: 0 0 8px rgba(0,0,0,0.4);
+}
+
+.input-box {
+    position: relative;
+    width: 100%;
+    height: 50px;
+    margin: 20px 0;
+}
+
+/* Aplica o estilo de pílula tanto para inputs quanto para o select */
+.input-box input,
+.input-box select {
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, .4);
+    border-radius: 40px;
+    outline: none;
+    font-size: 1.1em;
+    color: #fff;
+    padding: 0 20px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+    appearance: none; 
+    -webkit-appearance: none;
+}
+
+/* Ícone de seta personalizado para o select */
+.input-box.select-box::after {
+    content: '\25BC';
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #bd5b00;
+    pointer-events: none;
+    font-size: 0.9em;
+}
+
+.input-box input:focus,
+.input-box select:focus {
+    border-color: #bd5b00;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.input-box input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.input-box select option {
+    background-color: #333;
+    color: #fff;
+}
+
+.btn-cadastro-submit {
+    width: 100%;
+    padding: 15px 0;
+    background-color: #FF8C00;
+    color: white;
+    border: none;
+    border-radius: 40px;
+    font-size: 1.2em;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 10px rgba(255, 4, 4, 0.3);
+}
+
+.btn-cadastro-submit:hover {
+    background-color: #FF7F50;
+    transform: translateY(-2px);
+}
+
+.login-link {
+    font-size: 0.95em;
+    color: rgba(255, 255, 255, 0.9);
+    text-align: center;
+    margin-top: 30px;
+}
+
+.login-link p a {
+    color: #bd5b00;
+    text-decoration: none;
+    font-weight: 600;
+    transition: text-decoration 0.3s ease;
+}
+
+.login-link p a:hover {
+    text-decoration: underline;
+}
+.nav-buttons button {
+    transition: transform 0.2s, background 0.3s;
+    font-family: Arial, sans-serif;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.nav-buttons button:hover {
+    transform: scale(1.05);
+    background: #e67e00; /* Laranja um pouco mais escuro ao passar o mouse */
+}

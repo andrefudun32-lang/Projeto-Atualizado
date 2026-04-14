@@ -1,0 +1,109 @@
+*/
+[data-theme="dark"] {
+    --text-dark: #E3F2FD;
+    --text-light: #BBDEFB;
+    --background-gray: #1A1A1A;
+    --white: #2D2D2D;
+    --gray-50: #1A1A1A;
+    --gray-100: #2D2D2D;
+    --gray-200: #404040;
+    --gray-300: #555555;
+    --gray-400: #6B6B6B;
+    --gray-500: #808080;
+    --gray-600: #A0A0A0;
+    --gray-700: #C0C0C0;
+    --gray-800: #E0E0E0;
+    --gray-900: #F5F5F5;
+}
+
+*/
+body {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.main-content,
+.container,
+.denuncia-container,
+.login-container {
+    transition: background-color 0.3s ease;
+}
+
+[data-theme="dark"] .container {
+    background-color: rgba(45, 45, 45, 0.95);
+}
+
+[data-theme="dark"] .denuncia-container {
+    background-color: rgba(45, 45, 45, 0.95);
+}
+
+[data-theme="dark"] .login-container {
+    background-color: rgba(45, 45, 45, 0.15);
+}
+
+
+[data-theme="dark"] input,
+[data-theme="dark"] textarea,
+[data-theme="dark"] select {
+    background-color: var(--gray-100);
+    color: var(--gray-800);
+    border-color: var(--gray-300);
+}
+
+[data-theme="dark"] input:focus,
+[data-theme="dark"] textarea:focus,
+[data-theme="dark"] select:focus {
+    background-color: var(--gray-200);
+    border-color: var(--primary-orange);
+}
+
+[data-theme="dark"] .input-box input {
+    background: rgba(45, 45, 45, 0.3);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: #fff;
+}
+
+[data-theme="dark"] .input-box input:focus {
+    background-color: rgba(45, 45, 45, 0.5);
+    border-color: #bd5b00;
+}
+
+[data-theme="dark"] .input-box input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+[data-theme="dark"] .form-group input,
+[data-theme="dark"] .form-group textarea,
+[data-theme="dark"] .form-group select {
+    background-color: #2D2D2D;
+    color: #E3F2FD;
+    border-color: #555555;
+}
+
+[data-theme="dark"] .form-group input:focus,
+[data-theme="dark"] .form-group textarea:focus,
+[data-theme="dark"] .form-group select:focus {
+    background-color: #404040;
+    border-color: #FF8C00;
+    box-shadow: 0 0 10px rgba(255, 140, 0, 0.3);
+}
+
+[data-theme="dark"] .form-group input::placeholder,
+[data-theme="dark"] .form-group textarea::placeholder {
+    color: #BBDEFB;
+}
+
+
+[data-theme="dark"] .denuncias-table tbody tr:nth-child(even) {
+    background-color: var(--gray-100);
+}
+
+[data-theme="dark"] .denuncias-table tbody tr:hover {
+    background-color: var(--gray-200);
+}
+
+
+[data-theme="dark"] .setting-item {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Script para aplicar modo escuro automaticamente */

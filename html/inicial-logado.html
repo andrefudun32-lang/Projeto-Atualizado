@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Denuncia Pelotas - Área do Usuário</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <link rel="stylesheet" href="../css/inicial-logado.css">
+    <link rel="stylesheet" href="../css/dark-mode.css">
+</head>
+<body>
+    <div class="nav-buttons" style="position: absolute; top: 20px; left: 20px; z-index: 1000;">
+    <button onclick="window.location.href='inicial.html'" style="padding: 10px 15px; border-radius: 5px; border: none; background: #ff8c00; color: white; cursor: pointer; font-weight: bold; margin-right: 10px;">
+        🏠 Início
+    </button>
+    <button onclick="window.history.back()" style="padding: 10px 15px; border-radius: 5px; border: none; background: rgba(255,255,255,0.2); color: white; cursor: pointer; backdrop-filter: blur(5px);">
+        ⬅️ Voltar
+    </button>
+</div>
+    <header class="header">
+        <h1 class="site-title">
+            <i class="fas fa-city"></i>
+            Denuncia Pelotas
+        </h1>
+        <nav class="nav-buttons">
+            <a href="../html/denuncias.html" class="btn btn-ghost">
+                <i class="fas fa-eye icon-left"></i> Ver Denúncias
+            </a>
+            <a href="../html/fazer-denuncia.html" class="btn btn-filled">
+                <i class="fas fa-plus-circle icon-left"></i> Nova Denúncia
+            </a>
+            <a href="../html/menu-usuario.html" class="btn btn-ghost">
+                <i class="fas fa-user icon-left"></i> Meu Perfil
+            </a>
+            <a href="../html/admin-dashboard.html" class="btn btn-ghost admin-link" style="display: none;">
+                <i class="fas fa-shield-alt icon-left"></i> Painel Admin
+            </a>
+            <button onclick="fazerLogout()" class="btn btn-ghost logout-btn">
+                <i class="fas fa-sign-out-alt icon-left"></i> Sair
+            </button>
+        </nav>
+    </header>
+
+    <section class="hero-section">
+        <div class="hero-content">
+            <h2>Bem-vindo de volta!</h2>
+            <p>Continue contribuindo para uma Pelotas melhor. Registre novas denúncias e acompanhe o status das suas solicitações.</p>
+            <div class="hero-actions">
+                <a href="../html/fazer-denuncia.html" class="btn btn-filled hero-btn">
+                    <i class="fas fa-plus-circle icon-left"></i> Fazer Nova Denúncia
+                </a>
+                <a href="../html/denuncias.html" class="btn btn-ghost hero-btn">
+                    <i class="fas fa-search icon-left"></i> Ver Minhas Denúncias
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <main class="main-content">
+        <h2>Suas Ações Recentes</h2>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <h3>Denúncias Pendentes</h3>
+                <p class="stat-number">0</p>
+                <p class="stat-label">Aguardando análise</p>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h3>Denúncias Resolvidas</h3>
+                <p class="stat-number">0</p>
+                <p class="stat-label">Problemas solucionados</p>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <h3>Em Andamento</h3>
+                <p class="stat-number">0</p>
+                <p class="stat-label">Sendo analisadas</p>
+            </div>
+        </div>
+
+        <!-- Seção de Denúncias Recentes do Usuário -->
+        <div class="user-denuncias-section">
+            <h3>Suas Denúncias Recentes</h3>
+            <p>Acompanhe o status das suas denúncias</p>
+            
+            <div class="user-denuncias-table">
+                <table id="tabelaMinhasDenuncias">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tipo</th>
+                            <th>Endereço</th>
+                            <th>Status</th>
+                            <th>Data</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Denúncias do usuário serão carregadas aqui -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="view-all-user-denuncias">
+                <a href="../html/denuncias.html" class="btn btn-ghost">
+                    <i class="fas fa-eye icon-left"></i> Ver Todas as Minhas Denúncias
+                </a>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Denuncia Pelotas</h4>
+                <p>Transformando nossa cidade através da participação cívica</p>
+            </div>
+            <div class="footer-section">
+                <h4>Links Úteis</h4>
+                <ul>
+                    <li><a href="#">Sobre Nós</a></li>
+                    <li><a href="#">Como Funciona</a></li>
+                    <li><a href="#">Política de Privacidade</a></li>
+                    <li><a href="#">Termos de Uso</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Contato</h4>
+                <ul>
+                    <li><i class="fas fa-envelope"></i> contato@denunciapelotas.com</li>
+                    <li><i class="fas fa-phone"></i> (53) 3225-1234</li>
+                    <li><i class="fas fa-map-marker-alt"></i> Pelotas, RS</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Denuncia Pelotas. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="../js/dark-mode.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            verificarUsuarioLogado();
+            carregarEstatisticasUsuario();
+            carregarDenunciasUsuario();
+        });
+
+        function verificarUsuarioLogado() {
+            const usuarioLogado = localStorage.getItem('usuarioLogado');
+            if (!usuarioLogado) {
+                // Se não há usuário logado, redirecionar para login
+                window.location.href = '../html/login.html';
+                return;
+            }
+
+            const usuario = JSON.parse(usuarioLogado);
+            
+            // Mostrar link do admin se for administrador
+            if (usuario.tipo === 'admin') {
+                document.querySelector('.admin-link').style.display = 'inline-flex';
+            }
+
+            // Atualizar título com nome do usuário
+            const heroTitle = document.querySelector('.hero-content h2');
+            if (heroTitle && usuario.nome) {
+                heroTitle.textContent = `Bem-vindo de volta, ${usuario.nome}!`;
+            }
+        }
+
+        async function carregarEstatisticasUsuario() {
+            try {
+                const response = await fetch("http://localhost:3000/api/denuncias");
+                if (!response.ok) {
+                    throw new Error(`Erro HTTP: ${response.status}`);
+                }
+                
+                const denuncias = await response.json();
+                
+                // Calcular estatísticas
+                const pendentes = denuncias.filter(d => !d.status || d.status === 'Pendente').length;
+                const emAndamento = denuncias.filter(d => d.status === 'Em Andamento').length;
+                const resolvidas = denuncias.filter(d => d.status === 'Resolvida').length;
+                
+                // Atualizar os números na página
+                document.querySelector('.stat-card:nth-child(1) .stat-number').textContent = pendentes;
+                document.querySelector('.stat-card:nth-child(2) .stat-number').textContent = resolvidas;
+                document.querySelector('.stat-card:nth-child(3) .stat-number').textContent = emAndamento;
+                
+                console.log('Estatísticas carregadas:', { pendentes, emAndamento, resolvidas });
+                
+            } catch (error) {
+                console.error("Erro ao carregar estatísticas:", error);
+                // Manter os valores padrão (0) em caso de erro
+            }
+        }
+
+        async function carregarDenunciasUsuario() {
+            try {
+                const response = await fetch("http://localhost:3000/api/denuncias");
+                if (!response.ok) {
+                    throw new Error(`Erro HTTP: ${response.status}`);
+                }
+                
+                const denuncias = await response.json();
+                
+                // Filtrar denúncias do usuário (por enquanto mostra todas, pois não temos usuario_id)
+                const denunciasUsuario = denuncias.slice(0, 5); // Últimas 5 denúncias
+                
+                carregarTabelaDenunciasUsuario(denunciasUsuario);
+                
+            } catch (error) {
+                console.error("Erro ao carregar denúncias do usuário:", error);
+            }
+        }
+
+        function carregarTabelaDenunciasUsuario(denuncias) {
+            const tbody = document.querySelector("#tabelaMinhasDenuncias tbody");
+            if (!tbody) return;
+
+            tbody.innerHTML = "";
+
+            if (denuncias.length === 0) {
+                tbody.innerHTML = "<tr><td colspan='5'>Você ainda não fez nenhuma denúncia.</td></tr>";
+                return;
+            }
+
+            denuncias.forEach(denuncia => {
+                const tr = document.createElement("tr");
+                const status = denuncia.status || 'Pendente';
+                const statusClass = status === 'Pendente' ? 'pendente' : 
+                                   status === 'Em Andamento' ? 'andamento' : 
+                                   status === 'Resolvida' ? 'resolvida' : 'pendente';
+                
+                tr.innerHTML = `
+                    <td>${denuncia.id}</td>
+                    <td>${denuncia.tipo}</td>
+                    <td>${denuncia.endereco.length > 25 ? denuncia.endereco.substring(0, 25) + '...' : denuncia.endereco}</td>
+                    <td><span class="status-badge status-${statusClass}">${status}</span></td>
+                    <td>Recente</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Função para logout
+        function fazerLogout() {
+            localStorage.removeItem('usuarioLogado');
+            window.location.href = '../html/login.html';
+        }
+    </script>
+</body>
+</html>
