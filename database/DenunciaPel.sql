@@ -24,6 +24,7 @@ CREATE TABLE Usuario (
     cidade VARCHAR(100),                      -- Cidade
     estado VARCHAR(50),                       -- Estado
     cep VARCHAR(10),                          -- CEP
+    tipo VARCHAR(30),
     data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- Data de cadastro automática
 );
 
