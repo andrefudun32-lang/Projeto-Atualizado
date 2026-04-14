@@ -12,7 +12,7 @@ use DenunciaPel;
 -- TABELA DE USUÁRIOS COMUNS
 
 -- Armazena dados dos cidadãos que fazem denúncias
-CREATE TABLE Usuario (
+CREATE TABLE Usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,        -- Chave primária auto-incremento
     nome VARCHAR(100) NOT NULL,               -- Nome completo do usuário
     email VARCHAR(255) UNIQUE NOT NULL,       -- Email único para login
