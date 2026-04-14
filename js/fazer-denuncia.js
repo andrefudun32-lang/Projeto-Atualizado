@@ -1,42 +1,74 @@
-// 1. Lista de xingamentos/termos proibidos (adicione mais palavras entre aspas separadas por vírgula)
+// 1. Lista de xingamentos
 const palavrasProibidas = ["xingamento1", "palavraimpropria", "termoofensivo"];
 
-// Seleciona os elementos do DOM
-const form = document.querySelector('form');
-const fotoInput = document.getElementById('foto'); 
-const enderecoInput = document.querySelector('input[placeholder*="Rua das Flores"]'); // Seleciona pelo placeholder se não tiver ID
-const descricaoInput = document.querySelector('textarea'); // Seleciona a descrição
-
-// Função auxiliar para verificar ofensas
 function temOfensa(texto) {
+    if (!texto) return false;
     const textoMinusculo = texto.toLowerCase();
     return palavrasProibidas.some(palavra => textoMinusculo.includes(palavra.toLowerCase()));
 }
 
-// Adiciona o evento de submissão
-form.addEventListener('submit', function(event) {
+// Usamos window.onload para garantir que o HTML carregou todo antes de procurar os campos
+window.onload = function() {
+    const form = document.querySelector('form');
     
-    // VALIDAÇÃO 1: Foto (sua regra anterior)
-    if (fotoInput.files.length === 0) {
-        event.preventDefault();
-        alert("Adicione uma foto da sua denuncia para continuar");
-        fotoInput.focus();
-        return; // Para a execução aqui
+    if (!form) {
+        console.error("Erro: Formulário não encontrado no HTML!");
+        return;
     }
 
-    // VALIDAÇÃO 2: Xingamentos no Endereço ou Descrição
-    const conteudoEndereco = enderecoInput ? enderecoInput.value : "";
-    const conteudoDescricao = descricaoInput ? descricaoInput.value : "";
+    form.addEventListener('submit', function(event) {
+        event.preventDefault(); // Para o envio padrão para podermos validar
+        console.log("Botão clicado, iniciando validação...");
 
-    if (temOfensa(conteudoEndereco) || temOfensa(conteudoDescricao)) {
-        event.preventDefault();
-        alert("Sua denúncia contém palavras impróprias. Por favor, utilize uma linguagem respeitosa para que possamos ajudar Pelotas.");
-        
-        // Foca no campo que provavelmente tem o problema
-        if (temOfensa(conteudoDescricao)) {
-            descricaoInput.focus();
-        } else {
-            enderecoInput.focus();
+        // Captura os campos dentro do evento para garantir que pegamos os valores atuais
+        const fotoInput = document.getElementById('foto') || document.querySelector('input[type="file"]');
+        const enderecoInput = document.querySelector('input[placeholder*="Rua das Flores"]');
+        const descricaoInput = document.querySelector('textarea');
+        const tipoInput = document.querySelector('select');
+        const referenciaInput = document.querySelector('input[placeholder*="opcional"]');
+
+        // VALIDAÇÃO 1: Foto
+        if (!fotoInput || fotoInput.files.length === 0) {
+            alert("Adicione uma foto da sua denúncia para continuar");
+            return; 
         }
-    }
-});
+
+        // VALIDAÇÃO 2: Xingamentos
+        const conteudoEndereco = enderecoInput ? enderecoInput.value : "";
+        const conteudoDescricao = descricaoInput ? descricaoInput.value : "";
+
+        if (temOfensa(conteudoEndereco) || temOfensa(conteudoDescricao)) {
+            alert("Sua denúncia contém palavras impróprias. Por favor, utilize uma linguagem respeitosa.");
+            return; 
+        }
+
+        // DADOS PARA O BACKEND
+        const dadosDenuncia = {
+            tipo: tipoInput ? tipoInput.value : "Geral",
+            endereco: conteudoEndereco,
+            referencia: referenciaInput ? referenciaInput.value : "-",
+            descricao: conteudoDescricao,
+            status: "Pendente",
+            foto: fotoInput.files[0].name
+        };
+
+        // ENVIO PARA A API
+        fetch("http://localhost:3000/api/denuncias", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(dadosDenuncia)
+        })
+        .then(res => {
+            if (!res.ok) throw new Error("Erro no servidor");
+            return res.json();
+        })
+        .then(data => {
+            alert("Denúncia criada com sucesso!");
+            window.location.href = "denuncias.html"; 
+        })
+        .catch(err => {
+            console.error("Erro:", err);
+            alert("Erro ao conectar com o servidor. Verifique se o backend está ligado na porta 3000.");
+        });
+    });
+};
