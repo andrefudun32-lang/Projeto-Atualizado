@@ -257,26 +257,33 @@ async function addComentario() {
 }
 
 async function deleteDenuncia(denunciaId) {
-    if (!confirm('Tem certeza que deseja excluir esta denúncia?')) {
+    // 1. Confirmação com o usuário
+    if (!confirm(`Tem certeza que deseja excluir a denúncia #${denunciaId}?`)) {
         return;
     }
     
     try {
+        // 2. Faz a chamada para a rota que criamos no index.js
         const response = await fetch(`http://localhost:3000/api/denuncias/${denunciaId}`, {
             method: 'DELETE'
         });
 
+        // 3. Verifica se a resposta foi bem-sucedida
         if (response.ok) {
-            alert('Denúncia excluída com sucesso!');
+            const result = await response.json();
+            alert(result.message || 'Denúncia excluída com sucesso!');
+            
+            // 4. Atualiza a interface sem precisar de refresh manual
             loadDenuncias();
             loadDashboard();
         } else {
-            const error = await response.json();
-            alert('Erro ao excluir denúncia: ' + error.error);
+            // Se o servidor respondeu com erro (404, 500, etc), tentamos ler a mensagem
+            const errorData = await response.json();
+            alert('Erro ao excluir: ' + (errorData.error || 'Erro desconhecido'));
         }
     } catch (error) {
-        console.error('Erro ao excluir denúncia:', error);
-        alert('Erro ao excluir denúncia');
+        console.error('Erro na requisição DELETE:', error);
+        alert('Não foi possível conectar ao servidor. Verifique se ele está rodando.');
     }
 }
 
