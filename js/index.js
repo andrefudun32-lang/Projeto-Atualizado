@@ -35,8 +35,6 @@ app.post("/api/denuncias", (req, res) => {
   });
 });
 
-// (As outras rotas de PUT, DELETE e GET por ID de denúncias permanecem iguais ao seu arquivo original)
-
 // --- ROTAS DE USUÁRIOS (CADASTRO E LOGIN) ---
 
 // Rota para cadastrar novos usuários
@@ -58,7 +56,6 @@ app.post("/api/usuarios", (req, res) => {
     const sql = "INSERT INTO Usuarios (nome, email, senha, tipo) VALUES (?, ?, ?, ?)";
     console.log(req.body);
     
-    
     db.query(sql, [nome, email, senha, tipo], (err, result) => {
         if (err) {
             console.error("Erro no banco:", err);
@@ -68,7 +65,7 @@ app.post("/api/usuarios", (req, res) => {
     });
 });
 
-// NOVA ROTA: Login de usuários (Necessária para o seu login.js funcionar)
+// NOVA ROTA: Login de usuários
 app.post("/api/login", (req, res) => {
     const { email, senha } = req.body;
 
@@ -91,7 +88,32 @@ app.post("/api/login", (req, res) => {
         }
     });
 });
-// Rota para verificar se um e-mail existe (útil para validações rápidas no front-end)
+
+// --- NOVA ROTA: ATUALIZAR PERFIL (NOME OU EMAIL) ---
+app.post("/atualizar-perfil", (req, res) => {
+    const { id, campo, valor } = req.body;
+
+    // Verifica se os dados chegaram corretamente
+    if (!id || !campo || !valor) {
+        return res.status(400).json({ error: "Dados incompletos para atualização." });
+    }
+
+    // Define qual coluna será atualizada baseado no campo enviado pelo frontend
+    // Isso também evita injeção de SQL garantindo que só 'nome' ou 'email' sejam alterados
+    const coluna = campo === 'username' ? 'nome' : 'email';
+
+    const sql = `UPDATE Usuarios SET ${coluna} = ? WHERE id = ?`;
+
+    db.query(sql, [valor, id], (err, result) => {
+        if (err) {
+            console.error("Erro ao atualizar banco:", err);
+            return res.status(500).json({ error: "Erro interno ao atualizar perfil." });
+        }
+        res.status(200).json({ message: "Atualizado com sucesso" });
+    });
+});
+
+// Rota para verificar se um e-mail existe
 app.get("/api/usuarios/verificar/:email", (req, res) => {
     const email = req.params.email;
     const sql = "SELECT nome, tipo FROM Usuarios WHERE email = ?";
@@ -106,7 +128,7 @@ app.get("/api/usuarios/verificar/:email", (req, res) => {
     });
 });
 
-// Rota de Estatísticas Públicas (Para mostrar na Home sem precisar de login)
+// Rota de Estatísticas Públicas
 app.get("/api/estatisticas", (req, res) => {
     const sql = "SELECT COUNT(*) as total FROM Denuncias";
     db.query(sql, (err, results) => {
@@ -114,6 +136,7 @@ app.get("/api/estatisticas", (req, res) => {
         res.json(results[0]);
     });
 });
+
 app.listen(PORT, () => {
-  console.log(` Servidor rodando em http://localhost:${PORT}`);
+  console.log(`🚀 Servidor rodando em http://localhost:${PORT}`);
 });

@@ -16,13 +16,14 @@
 </head>
 <body>
     <div class="nav-buttons" style="position: absolute; top: 20px; left: 20px; z-index: 1000;">
-    <button onclick="window.location.href='inicial.html'" style="padding: 10px 15px; border-radius: 5px; border: none; background: #ff8c00; color: white; cursor: pointer; font-weight: bold; margin-right: 10px;">
-        🏠 Início
-    </button>
-    <button onclick="window.history.back()" style="padding: 10px 15px; border-radius: 5px; border: none; background: rgba(255,255,255,0.2); color: white; cursor: pointer; backdrop-filter: blur(5px);">
-        ⬅️ Voltar
-    </button>
-</div>
+        <button onclick="window.location.href='inicial-logado.html'" style="padding: 10px 15px; border-radius: 5px; border: none; background: #ff8c00; color: white; cursor: pointer; font-weight: bold; margin-right: 10px;">
+            🏠 Início
+        </button>
+        <button onclick="window.history.back()" style="padding: 10px 15px; border-radius: 5px; border: none; background: rgba(255,255,255,0.2); color: white; cursor: pointer; backdrop-filter: blur(5px);">
+            ⬅️ Voltar
+        </button>
+    </div>
+
     <header class="header">
         <h1 class="site-title">
             <i class="fas fa-city"></i>
@@ -31,12 +32,12 @@
         <nav class="nav-buttons">
             <div class="user-info">
                 <i class="fas fa-user-circle"></i>
-                <span>Bem-vindo, Rafa!</span>
+                <span id="nome-display">Bem-vindo, Rafa!</span>
             </div>
             <a href="../html/inicial-logado.html" class="btn btn-ghost">
                 <i class="fas fa-home icon-left"></i> Início
             </a>
-            <a href="../html/login.html" class="btn btn-filled">
+            <a href="#" id="btn-sair" class="btn btn-filled">
                 <i class="fas fa-sign-out-alt icon-left"></i> Sair
             </a>
         </nav>
@@ -111,35 +112,40 @@
 
             <div class="settings-section">
                 <h3><i class="fas fa-user"></i> Conta</h3>
+                
                 <div class="setting-item">
-                    <div class="setting-info">
+                    <div class="setting-info" style="width: 100%;">
                         <h4>Nome de Usuário</h4>
-                        <p>rafa</p>
+                        <p id="display-username">Carregando...</p>
+                        <input type="text" id="edit-username" style="display: none; width: 80%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px;" class="edit-input">
                     </div>
                     <div class="setting-control">
-                        <button class="btn btn-ghost btn-small">
-                            <i class="fas fa-edit"></i> Editar
+                        <button class="btn btn-ghost btn-small" onclick="toggleEdit('username')">
+                            <i class="fas fa-edit" id="icon-username"></i> <span id="btn-text-username">Editar</span>
                         </button>
                     </div>
                 </div>
+                
                 <div class="setting-item">
-                    <div class="setting-info">
+                    <div class="setting-info" style="width: 100%;">
                         <h4>Email</h4>
-                        <p>rafa@email.com</p>
+                        <p id="display-email">Carregando@email.com</p>
+                        <input type="email" id="edit-email" style="display: none; width: 80%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px;" class="edit-input">
                     </div>
                     <div class="setting-control">
-                        <button class="btn btn-ghost btn-small">
-                            <i class="fas fa-edit"></i> Editar
+                        <button class="btn btn-ghost btn-small" onclick="toggleEdit('email')">
+                            <i class="fas fa-edit" id="icon-email"></i> <span id="btn-text-email">Editar</span>
                         </button>
                     </div>
                 </div>
+                
                 <div class="setting-item">
                     <div class="setting-info">
                         <h4>Senha</h4>
                         <p>Altere sua senha de acesso</p>
                     </div>
                     <div class="setting-control">
-                        <button class="btn btn-ghost btn-small">
+                        <button class="btn btn-ghost btn-small" onclick="alert('Funcionalidade de alteração de senha em desenvolvimento.')">
                             <i class="fas fa-key"></i> Alterar
                         </button>
                     </div>
@@ -182,7 +188,7 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2025 Denuncia Pelotas. Todos os direitos reservados.</p>
+            <p>&copy; 2026 Denuncia Pelotas. Todos os direitos reservados.</p>
         </div>
     </footer>
 
