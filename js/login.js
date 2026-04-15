@@ -8,7 +8,7 @@ async function handleLoginButtonClick() {
     }
 
     try {
-        // Agora consultamos o SERVIDOR em vez de usar dados fixos
+        // Consulta o servidor na porta 3000
         const response = await fetch('http://localhost:3000/api/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -18,20 +18,23 @@ async function handleLoginButtonClick() {
         const data = await response.json();
 
         if (response.ok) {
-            // Salva os dados que vieram do BANCO DE DADOS
+            // Salva o objeto do usuário (incluindo o campo 'tipo') no localStorage
             localStorage.setItem('usuarioLogado', JSON.stringify(data.user));
             
             alert(`Login realizado com sucesso! Bem-vindo, ${data.user.nome}!`);
             
-            // Redireciona conforme o tipo cadastrado no banco
-            if (data.user.tipo === 'Administrador' || data.user.tipo === 'admin') {
+            // REDIRECIONAMENTO INTELIGENTE
+            // Verifica se o tipo é funcionario (conforme seu cadastro) ou admin
+            if (data.user.tipo === 'funcionario' || data.user.tipo === 'admin' || data.user.tipo === 'Administrador') {
+                // Se for da prefeitura, vai para o Dashboard Laranja
                 window.location.href = "admin-dashboard.html";
             } else {
+                // Se for cidadão comum, vai para a tela inicial de usuário
                 window.location.href = "inicial-logado.html";
             }
         } else {
-            // Exibe a mensagem de erro que vem do servidor (ex: "E-mail ou senha incorretos")
-            alert(data.mensagem);
+            // Exibe a mensagem de erro vinda do servidor (ex: "E-mail ou senha incorretos")
+            alert(data.mensagem || "Erro ao realizar login.");
         }
     } catch (error) {
         console.error("Erro na conexão:", error);
