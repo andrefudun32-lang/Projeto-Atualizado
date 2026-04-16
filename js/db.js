@@ -4,7 +4,7 @@ const mysql = require("mysql2");
 const db = mysql.createConnection({
     host: "localhost",
     user: "root",           // Usuário padrão do MySQL (XAMPP/Workbench)
-    password: "",           // Deixe vazio se não definiu senha, ou coloque sua senha real
+    password: "senacrs",           // Deixe vazio se não definiu senha, ou coloque sua senha real
     database: "DenunciaPel" // Nome exato definido no seu script SQL
 });
 
