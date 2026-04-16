@@ -10,10 +10,11 @@ body {
     background-size: cover;
     background-position: center;
     color: #fff;
+    /* Libera o clique em toda a aplicação */
+    -webkit-app-region: no-drag;
 }
 
 .cadastro-container {
-    /* Aumentamos de 420px para 850px para caber os dois blocos lado a lado */
     width: 100%;
     max-width: 850px; 
     background-color: rgba(255, 165, 0, 0.1);
@@ -25,11 +26,15 @@ body {
     -webkit-backdrop-filter: blur(15px);
     box-sizing: border-box;
     margin: 20px;
+    position: relative;
+    z-index: 1;
+    /* Transição suave para quando a coluna adicional aparecer */
+    transition: max-width 0.4s ease;
 }
 
 .cadastro-container h2 {
     font-size: 2.5em;
-    color: #FF8C00; /* Laranja mais vibrante para o título */
+    color: #FF8C00;
     text-align: center;
     margin-bottom: 10px;
     text-shadow: 0 0 8px rgba(0,0,0,0.4);
@@ -39,15 +44,22 @@ body {
 .form-grid-container {
     display: flex;
     flex-direction: row;
-    gap: 40px; /* Espaço entre a coluna esquerda e direita */
+    gap: 40px;
     justify-content: space-between;
     margin-top: 20px;
 }
 
 .form-block {
-    flex: 1; /* Faz as duas colunas terem o mesmo tamanho */
+    flex: 1;
     display: flex;
     flex-direction: column;
+    /* Animação para a coluna aparecer suavemente */
+    animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
 }
 
 .form-block h3 {
@@ -64,7 +76,8 @@ body {
     position: relative;
     width: 100%;
     height: 50px;
-    margin: 12px 0; /* Diminuímos a margem para caber melhor verticalmente */
+    margin: 12px 0;
+    z-index: 10;
 }
 
 .input-box input,
@@ -81,6 +94,15 @@ body {
     box-sizing: border-box;
     transition: all 0.3s ease;
     appearance: none; 
+
+    /* CORREÇÃO CRÍTICA PARA O CLIQUE NO ELECTRON */
+    -webkit-app-region: no-drag !important;
+    pointer-events: auto !important;
+    cursor: text;
+}
+
+.input-box select {
+    cursor: pointer;
 }
 
 .input-box.select-box::after {
@@ -113,9 +135,9 @@ body {
 /* --- BOTÃO E LINKS --- */
 .btn-cadastro-submit {
     width: 100%;
-    max-width: 350px; /* Botão não precisa ser gigante */
+    max-width: 350px;
     display: block;
-    margin: 30px auto 0; /* Centraliza o botão */
+    margin: 30px auto 0;
     padding: 15px 0;
     background-color: #FF8C00;
     color: white;
@@ -126,6 +148,7 @@ body {
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 0 4px 15px rgba(255, 140, 0, 0.3);
+    -webkit-app-region: no-drag;
 }
 
 .btn-cadastro-submit:hover {
@@ -145,24 +168,26 @@ body {
     color: #FF8C00;
     text-decoration: none;
     font-weight: 600;
+    -webkit-app-region: no-drag;
 }
 
 .login-link p a:hover {
     text-decoration: underline;
 }
 
-/* Estilo dos botões de navegação no topo */
+/* Navegação */
 .nav-buttons button {
     transition: transform 0.2s, background 0.3s;
     font-family: Arial, sans-serif;
     box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    -webkit-app-region: no-drag;
 }
 
 .nav-buttons button:hover {
     transform: scale(1.05);
 }
 
-/* Responsividade: Se a tela for pequena, vira uma coluna só */
+/* Responsividade */
 @media (max-width: 768px) {
     .form-grid-container {
         flex-direction: column;
@@ -170,5 +195,6 @@ body {
     }
     .cadastro-container {
         padding: 30px 20px;
+        max-width: 450px;
     }
 }
