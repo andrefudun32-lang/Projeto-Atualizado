@@ -1,4 +1,4 @@
-// Função para verificar se o usuário tem permissão
+// 1. Verificação de Login
 function checkAdminLogin() {
     const usuarioLogado = localStorage.getItem('usuarioLogado');
     if (!usuarioLogado) {
@@ -7,100 +7,108 @@ function checkAdminLogin() {
     }
 
     const usuario = JSON.parse(usuarioLogado);
-    // Permite admin, Administrador ou funcionario
+    // Aceita admin, Administrador ou funcionario
     if (usuario.tipo !== 'admin' && usuario.tipo !== 'Administrador' && usuario.tipo !== 'funcionario') {
-        alert('Acesso negado. Apenas funcionários podem acessar esta página.');
+        alert('Acesso negado.');
         window.location.href = 'inicial-logado.html';
     } else {
-        // Atualiza o nome do usuário no topo do painel
-        const userDisplay = document.querySelector('.user-info span') || document.querySelector('.admin-name');
-        if (userDisplay) userDisplay.textContent = usuario.nome;
+        const adminDisplay = document.getElementById('adminName');
+        if (adminDisplay) adminDisplay.textContent = usuario.nome;
     }
 }
 
-// FUNÇÃO PARA ALTERNAR AS SEÇÕES (O que está dando erro no seu console)
-window.showSection = function(sectionId) {
-    console.log("Alterando para seção:", sectionId);
-    
-    // Esconde todas as seções
-    const sections = document.querySelectorAll('.content-section');
-    sections.forEach(section => {
-        section.classList.remove('active');
-        section.style.display = 'none';
-    });
-
-    // Mostra a seção clicada
-    const activeSection = document.getElementById(sectionId);
-    if (activeSection) {
-        activeSection.classList.add('active');
-        activeSection.style.display = 'block';
-    }
-
-    // Remove a classe 'active' de todos os links do menu
-    const menuLinks = document.querySelectorAll('.sidebar ul li');
-    menuLinks.forEach(link => link.classList.remove('active'));
-
-    // Adiciona 'active' no link clicado (opcional, para feedback visual)
-    const activeLink = document.querySelector(`[onclick="showSection('${sectionId}')"]`);
-    if (activeLink) activeLink.parentElement.classList.add('active');
-}
-
-// Função para buscar dados do banco e preencher os cards
+// 2. Carregar Dados
 async function carregarDadosDashboard() {
     try {
         const response = await fetch('http://localhost:3000/api/denuncias');
-        if (!response.ok) throw new Error('Erro na rede');
+        if (!response.ok) throw new Error('Erro ao buscar dados');
         
         const denuncias = await response.json();
 
-        // Atualiza os números nos cards
-        document.getElementById('total-denuncias').textContent = denuncias.length;
-        document.getElementById('pendentes').textContent = denuncias.filter(d => d.status === 'Pendente').length;
-        document.getElementById('em-andamento').textContent = denuncias.filter(d => d.status === 'Em Andamento').length;
-        document.getElementById('resolvidas').textContent = denuncias.filter(d => d.status === 'Resolvida').length;
+        document.getElementById('totalDenuncias').textContent = denuncias.length;
+        document.getElementById('denunciasPendentes').textContent = denuncias.filter(d => d.status === 'Pendente').length;
+        document.getElementById('denunciasEmAndamento').textContent = denuncias.filter(d => d.status === 'Em Andamento').length;
+        document.getElementById('denunciasResolvidas').textContent = denuncias.filter(d => d.status === 'Resolvida').length;
 
+        renderizarTabela(denuncias);
     } catch (error) {
-        console.error('Erro ao carregar dashboard:', error);
-        // Em caso de erro, mantém o "!" ou coloca "0"
+        console.error('Erro no Dashboard:', error);
     }
 }
 
-// Inicialização ao carregar a página
+// 3. Renderizar Tabela com Botão Excluir
+function renderizarTabela(denuncias) {
+    const tabelaCorpo = document.getElementById('denunciasTableBody');
+    if (!tabelaCorpo) return;
+
+    if (denuncias.length === 0) {
+        tabelaCorpo.innerHTML = '<tr><td colspan="7">Nenhuma denúncia encontrada.</td></tr>';
+        return;
+    }
+
+    tabelaCorpo.innerHTML = ''; 
+
+    denuncias.forEach(denuncia => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>#${denuncia.id}</td>
+            <td>${denuncia.tipo}</td>
+            <td>${denuncia.endereco}</td>
+            <td><span class="badge-status ${denuncia.status.toLowerCase().replace(' ', '-')}">${denuncia.status}</span></td>
+            <td>${denuncia.prioridade || 'Média'}</td>
+            <td>${denuncia.data_cadastro ? new Date(denuncia.data_cadastro).toLocaleDateString('pt-BR') : '---'}</td>
+            <td>
+                <button class="btn-acao btn-ver" onclick="verDetalhes(${denuncia.id})" title="Ver Detalhes">
+                    <i class="fas fa-eye"></i>
+                </button>
+                <button class="btn-acao btn-excluir" onclick="deletarDenuncia(${denuncia.id})" title="Excluir Denúncia" style="color: #ff4d4d; margin-left: 10px;">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+            </td>
+        `;
+        tabelaCorpo.appendChild(tr);
+    });
+}
+
+// 4. FUNÇÃO PARA EXCLUIR (NOVA)
+window.deletarDenuncia = async function(id) {
+    if (confirm(`Deseja realmente excluir a denúncia #${id} permanentemente?`)) {
+        try {
+            const response = await fetch(`http://localhost:3000/api/denuncias/${id}`, {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                alert("Denúncia removida com sucesso!");
+                carregarDadosDashboard(); // Recarrega a lista automaticamente
+            } else {
+                alert("Erro ao tentar excluir.");
+            }
+        } catch (error) {
+            console.error("Erro na requisição:", error);
+            alert("Erro de conexão com o servidor.");
+        }
+    }
+};
+
+// --- Outras Funções Auxiliares ---
+
+window.showSection = function(sectionId) {
+    document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+    const activeSection = document.getElementById(sectionId);
+    if (activeSection) activeSection.classList.add('active');
+};
+
+window.refreshDenuncias = function() {
+    carregarDadosDashboard();
+};
+
+window.logout = function() {
+    localStorage.removeItem('usuarioLogado');
+    window.location.href = 'login.html';
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     checkAdminLogin();
     carregarDadosDashboard();
-    
-    // Garante que o Dashboard comece visível
-    showSection('dashboard');
-});
-// --- FUNÇÃO DE LOGOUT (SAIR) ---
-
-// Espera o DOM carregar para garantir que o botão exista
-document.addEventListener('DOMContentLoaded', () => {
-    // Seleciona o botão de sair pelo texto ou pela classe
-    // No seu HTML ele parece ser um <button> ou <a> com o texto "Sair"
-    const btnSair = document.querySelector('.logout-btn') || 
-                    document.querySelector('button:contains("Sair")') ||
-                    document.querySelector('.btn-sair'); // Ajuste conforme sua classe real
-
-    // Se o seletor acima não funcionar, podemos buscar pelo conteúdo:
-    const todosBotoes = document.querySelectorAll('button');
-    const botaoSairReal = Array.from(todosBotoes).find(btn => btn.textContent.includes('Sair'));
-
-    if (botaoSairReal) {
-        botaoSairReal.addEventListener('click', (e) => {
-            e.preventDefault();
-            
-            // 1. Limpa os dados do usuário logado
-            localStorage.removeItem('usuarioLogado');
-            
-            // 2. Opcional: Limpar tudo se não tiver outros dados importantes
-            // localStorage.clear(); 
-
-            alert('Sessão encerrada com sucesso!');
-
-            // 3. Redireciona para a tela de login
-            window.location.href = 'login.html';
-        });
-    }
 });
