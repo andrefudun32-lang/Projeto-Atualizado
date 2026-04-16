@@ -1,53 +1,52 @@
-
--- BANCO DE DADOS - SISTEMA DE DENÚNCIAS
-
--- Este arquivo contém a estrutura completa do banco de dados
--- Inclui tabelas para usuários, administradores e denúncias
-
 -- Criação do banco de dados
-create database DenunciaPel;
-use DenunciaPel;
+CREATE DATABASE IF NOT EXISTS DenunciaPel;
+USE DenunciaPel;
 
-
+-- ---------------------------------------------------------
 -- TABELA DE USUÁRIOS COMUNS
-
--- Armazena dados dos cidadãos que fazem denúncias
+-- ---------------------------------------------------------
 CREATE TABLE Usuarios (
-    id INT AUTO_INCREMENT PRIMARY KEY,        -- Chave primária auto-incremento
-    nome VARCHAR(100) NOT NULL,               -- Nome completo do usuário
-    email VARCHAR(255) UNIQUE NOT NULL,       -- Email único para login
-    senha VARCHAR(255) NOT NULL,              -- Senha criptografada
-    telefone VARCHAR(20),                     -- Telefone de contato
-    cpf VARCHAR(14) UNIQUE,                   -- CPF único
-    data_nascimento DATE,                     -- Data de nascimento
-    endereco VARCHAR(255),                    -- Endereço residencial
-    cidade VARCHAR(100),                      -- Cidade
-    estado VARCHAR(50),                       -- Estado
-    cep VARCHAR(10),                          -- CEP
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    senha VARCHAR(255) NOT NULL,
+    telefone VARCHAR(20),
+    cpf VARCHAR(14) UNIQUE,
+    data_nascimento DATE,
+    endereco VARCHAR(255),
+    cidade VARCHAR(100),
+    estado VARCHAR(50),
+    cep VARCHAR(10),
     tipo VARCHAR(30),
-    data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- Data de cadastro automática
+    data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-
-
+-- ---------------------------------------------------------
 -- TABELA DE ADMINISTRADORES
-
--- Armazena dados dos funcionários que gerenciam as denúncias
+-- ---------------------------------------------------------
 CREATE TABLE UsuarioAdm (
-    id INT AUTO_INCREMENT PRIMARY KEY,        -- Chave primária
-    nome VARCHAR(100) NOT NULL,               -- Nome do administrador
-    email VARCHAR(255) UNIQUE NOT NULL,       -- Email único para login
-    senha VARCHAR(255) NOT NULL,              -- Senha criptografada
-    cargo VARCHAR(100),                       -- Cargo na prefeitura
-    departamento VARCHAR(100)                 -- Departamento responsável
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    senha VARCHAR(255) NOT NULL,
+    cargo VARCHAR(100),
+    departamento VARCHAR(100)
 );
 
+-- ---------------------------------------------------------
+-- TABELA DE DENÚNCIAS
+-- ---------------------------------------------------------
 CREATE TABLE Denuncias (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id INT, -- Relaciona a denúncia ao usuário que a criou
     tipo VARCHAR(70) NOT NULL,
     endereco VARCHAR(255) NOT NULL,
     referencia VARCHAR(255),
     descricao VARCHAR(500) NOT NULL,
-    foto LONGTEXT
+    foto LONGTEXT, -- Definido como LONGTEXT para suportar Base64 ou caminhos longos
+    status VARCHAR(20) DEFAULT 'Pendente', -- Status inicial exigido pelo sistema
+    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     
-    );
+    -- Restrição de integridade: vincula ao ID da tabela Usuarios
+    CONSTRAINT fk_usuario_denuncia FOREIGN KEY (usuario_id) REFERENCES Usuarios(id) ON DELETE SET NULL
+);
