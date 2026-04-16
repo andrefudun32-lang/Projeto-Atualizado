@@ -5,26 +5,22 @@
     const bCidadao = document.getElementById('bloco-cidadao');
     const bFuncionario = document.getElementById('bloco-funcionario');
 
-    // Lógica de Visibilidade e Reset de Tela
+    // 1. Lista expandida de termos proibidos
+    const termosProibidos = ["pinto", "rola", "xingamento1", "admin", "palavrao"];
+
+    // Função que verifica se uma string contém ofensa
+    function temOfensa(texto) {
+        if (!texto) return false;
+        const textoMinusculo = texto.toLowerCase();
+        return termosProibidos.some(palavra => textoMinusculo.includes(palavra.toLowerCase()));
+    }
+
+    // Lógica de Visibilidade (Manter o que você já tinha)
     selectTipo.addEventListener('change', function() {
         const valor = this.value;
-
-        if (valor === 'funcionario') {
-            // Mostra a coluna e o bloco de funcionário
-            colAdicional.style.display = 'block';
-            bFuncionario.style.display = 'block';
-            bCidadao.style.display = 'none';
-        } else if (valor === 'cidadao') {
-            // Mostra a coluna e o bloco de cidadão
-            colAdicional.style.display = 'block';
-            bFuncionario.style.display = 'none';
-            bCidadao.style.display = 'block';
-        } else {
-            // Volta à tela inicial: esconde a coluna adicional inteira
-            colAdicional.style.display = 'none';
-            bFuncionario.style.display = 'none';
-            bCidadao.style.display = 'none';
-        }
+        colAdicional.style.display = (valor === 'funcionario' || valor === 'cidadao') ? 'block' : 'none';
+        bFuncionario.style.display = (valor === 'funcionario') ? 'block' : 'none';
+        bCidadao.style.display = (valor === 'cidadao') ? 'block' : 'none';
     });
 
     if (formCadastro) {
@@ -37,6 +33,7 @@
                 return;
             }
 
+            // Coleta de todos os dados
             const dadosUsuario = {
                 nome: document.getElementById('nome').value,
                 email: document.getElementById('email').value,
@@ -44,7 +41,6 @@
                 tipo: tipo
             };
 
-            // Coleta dados específicos baseado no tipo
             if (tipo === 'funcionario') {
                 dadosUsuario.cargo = document.getElementById('cargo').value;
                 dadosUsuario.departamento = document.getElementById('departamento').value;
@@ -54,6 +50,17 @@
                 dadosUsuario.endereco = document.getElementById('endereco').value;
             }
 
+            // --- NOVA VALIDAÇÃO GLOBAL DE OFENSAS ---
+            // Transforma todos os valores do objeto em uma lista e verifica um por um
+            const valores = Object.values(dadosUsuario);
+            const encontrouOfensa = valores.some(valor => temOfensa(valor));
+
+            if (encontrouOfensa) {
+                alert("❌ Cadastro negado: Foram detectadas palavras impróprias ou termos não permitidos em um dos campos. Por favor, revise seus dados.");
+                return; // Bloqueia o fetch
+            }
+
+            // Se passar na validação, segue o envio...
             try {
                 const response = await fetch('http://localhost:3000/api/usuarios', {
                     method: 'POST',
