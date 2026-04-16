@@ -35,17 +35,17 @@
                     </div>
                     <div class="input-box select-box">
                         <select id="tipo" required>
-                            <option value="" disabled selected>Tipo de Usuário</option>
+                            <option value="" selected>Tipo de Usuário</option>
                             <option value="cidadao">Cidadão</option>
                             <option value="funcionario">Funcionário (Prefeitura)</option>
                         </select>
                     </div>
                 </div>
 
-                <div class="form-block">
-                    <h3>Informações Adicionais</h3>
+                <div class="form-block" id="coluna-adicional" style="display: none;">
+                    <h3 id="titulo-adicional">Informações Adicionais</h3>
                     
-                    <div id="bloco-cidadao">
+                    <div id="bloco-cidadao" style="display: none;">
                         <div class="input-box">
                             <input type="text" id="cpf" placeholder="CPF (somente números)">
                         </div>
@@ -76,25 +76,6 @@
         </form>
     </div>
 
-    <script>
-        // Lógica de alternância de interface
-        const selectTipo = document.getElementById('tipo');
-        const blocoCidadao = document.getElementById('bloco-cidadao');
-        const blocoFuncionario = document.getElementById('bloco-funcionario');
-        const inputCpf = document.getElementById('cpf');
-
-        selectTipo.addEventListener('change', function() {
-            if (this.value === 'funcionario') {
-                blocoFuncionario.style.display = 'block';
-                blocoCidadao.style.display = 'none';
-                inputCpf.required = false; // CPF não existe na tabela UsuarioAdm
-            } else {
-                blocoFuncionario.style.display = 'none';
-                blocoCidadao.style.display = 'block';
-                inputCpf.required = true;
-            }
-        });
-    </script>
     <script src="../js/cadastro.js"></script>
 </body>
 </html>
