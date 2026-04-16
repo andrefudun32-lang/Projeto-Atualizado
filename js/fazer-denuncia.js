@@ -40,23 +40,34 @@ window.onload = function() {
             return; 
         }
 
+        // --- NOVA VALIDAÇÃO 3: Verificar se há número no endereço ---
+        const temNumeroNoEndereco = /\d/.test(conteudoEndereco);
+        if (!temNumeroNoEndereco) {
+            alert("⚠️ Por favor, informe o número no campo de endereço (ex: Rua das Flores, 123).");
+            if (enderecoInput) {
+                enderecoInput.focus();
+                enderecoInput.style.borderColor = "red";
+            }
+            return; // Interrompe o envio
+        } else {
+            if (enderecoInput) enderecoInput.style.borderColor = ""; // Reseta a cor se estiver ok
+        }
+
         // --- PROCESSO DE CONVERSÃO DA IMAGEM ---
         const leitor = new FileReader();
-        leitor.readAsDataURL(fotoInput.files[0]); // Transforma a imagem em texto (Base64)
+        leitor.readAsDataURL(fotoInput.files[0]); 
 
         leitor.onload = function() {
             const fotoBase64 = leitor.result;
 
-            // DADOS PARA O BACKEND (Agora com a foto convertida)
             const dadosDenuncia = {
                 tipo: tipoInput ? tipoInput.value : "Geral",
                 endereco: conteudoEndereco,
                 referencia: referenciaInput ? referenciaInput.value : "-",
                 descricao: conteudoDescricao,
-                foto: fotoBase64 // Aqui vai o código da imagem, não o nome
+                foto: fotoBase64 
             };
 
-            // ENVIO PARA A API
             fetch("http://localhost:3000/api/denuncias", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -64,7 +75,6 @@ window.onload = function() {
             })
             .then(res => {
                 if (!res.ok) {
-                    // Se o status for 500, tentamos ler a mensagem de erro do backend
                     return res.json().then(err => { throw new Error(err.error || "Erro no servidor"); });
                 }
                 return res.json();
