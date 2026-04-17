@@ -13,16 +13,26 @@
     
     <link rel="stylesheet" href="../css/inicial-logado.css">
     <link rel="stylesheet" href="../css/dark-mode.css">
+    <style>
+        /* Estilo para a miniatura da foto na tabela */
+        .img-miniatura {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+    </style>
 </head>
 <body>
     <div class="nav-buttons" style="position: absolute; top: 20px; left: 20px; z-index: 1000;">
-    <button onclick="window.location.href='inicial.html'" style="padding: 10px 15px; border-radius: 5px; border: none; background: #ff8c00; color: white; cursor: pointer; font-weight: bold; margin-right: 10px;">
-        🏠 Início
-    </button>
-    <button onclick="window.history.back()" style="padding: 10px 15px; border-radius: 5px; border: none; background: rgba(255,255,255,0.2); color: white; cursor: pointer; backdrop-filter: blur(5px);">
-        ⬅️ Voltar
-    </button>
-</div>
+        <button onclick="window.location.href='inicial.html'" style="padding: 10px 15px; border-radius: 5px; border: none; background: #ff8c00; color: white; cursor: pointer; font-weight: bold; margin-right: 10px;">
+            🏠 Início
+        </button>
+        <button onclick="window.history.back()" style="padding: 10px 15px; border-radius: 5px; border: none; background: rgba(255,255,255,0.2); color: white; cursor: pointer; backdrop-filter: blur(5px);">
+            ⬅️ Voltar
+        </button>
+    </div>
     <header class="header">
         <h1 class="site-title">
             <i class="fas fa-city"></i>
@@ -91,7 +101,6 @@
             </div>
         </div>
 
-        <!-- Seção de Denúncias Recentes do Usuário -->
         <div class="user-denuncias-section">
             <h3>Suas Denúncias Recentes</h3>
             <p>Acompanhe o status das suas denúncias</p>
@@ -101,6 +110,7 @@
                     <thead>
                         <tr>
                             <th>ID</th>
+                            <th>Foto</th>
                             <th>Tipo</th>
                             <th>Endereço</th>
                             <th>Status</th>
@@ -108,8 +118,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Denúncias do usuário serão carregadas aqui -->
-                    </tbody>
+                        </tbody>
                 </table>
             </div>
             
@@ -119,7 +128,6 @@
                 </a>
             </div>
         </div>
-
     </main>
 
     <footer class="footer">
@@ -162,19 +170,13 @@
         function verificarUsuarioLogado() {
             const usuarioLogado = localStorage.getItem('usuarioLogado');
             if (!usuarioLogado) {
-                // Se não há usuário logado, redirecionar para login
                 window.location.href = '../html/login.html';
                 return;
             }
-
             const usuario = JSON.parse(usuarioLogado);
-            
-            // Mostrar link do admin se for administrador
             if (usuario.tipo === 'admin') {
                 document.querySelector('.admin-link').style.display = 'inline-flex';
             }
-
-            // Atualizar título com nome do usuário
             const heroTitle = document.querySelector('.hero-content h2');
             if (heroTitle && usuario.nome) {
                 heroTitle.textContent = `Bem-vindo de volta, ${usuario.nome}!`;
@@ -184,44 +186,28 @@
         async function carregarEstatisticasUsuario() {
             try {
                 const response = await fetch("http://localhost:3000/api/denuncias");
-                if (!response.ok) {
-                    throw new Error(`Erro HTTP: ${response.status}`);
-                }
-                
+                if (!response.ok) throw new Error(`Erro HTTP: ${response.status}`);
                 const denuncias = await response.json();
                 
-                // Calcular estatísticas
                 const pendentes = denuncias.filter(d => !d.status || d.status === 'Pendente').length;
                 const emAndamento = denuncias.filter(d => d.status === 'Em Andamento').length;
                 const resolvidas = denuncias.filter(d => d.status === 'Resolvida').length;
                 
-                // Atualizar os números na página
                 document.querySelector('.stat-card:nth-child(1) .stat-number').textContent = pendentes;
                 document.querySelector('.stat-card:nth-child(2) .stat-number').textContent = resolvidas;
                 document.querySelector('.stat-card:nth-child(3) .stat-number').textContent = emAndamento;
-                
-                console.log('Estatísticas carregadas:', { pendentes, emAndamento, resolvidas });
-                
             } catch (error) {
                 console.error("Erro ao carregar estatísticas:", error);
-                // Manter os valores padrão (0) em caso de erro
             }
         }
 
         async function carregarDenunciasUsuario() {
             try {
                 const response = await fetch("http://localhost:3000/api/denuncias");
-                if (!response.ok) {
-                    throw new Error(`Erro HTTP: ${response.status}`);
-                }
-                
+                if (!response.ok) throw new Error(`Erro HTTP: ${response.status}`);
                 const denuncias = await response.json();
-                
-                // Filtrar denúncias do usuário (por enquanto mostra todas, pois não temos usuario_id)
-                const denunciasUsuario = denuncias.slice(0, 5); // Últimas 5 denúncias
-                
+                const denunciasUsuario = denuncias.slice(-5).reverse(); // Mostra as 5 mais recentes
                 carregarTabelaDenunciasUsuario(denunciasUsuario);
-                
             } catch (error) {
                 console.error("Erro ao carregar denúncias do usuário:", error);
             }
@@ -230,11 +216,10 @@
         function carregarTabelaDenunciasUsuario(denuncias) {
             const tbody = document.querySelector("#tabelaMinhasDenuncias tbody");
             if (!tbody) return;
-
             tbody.innerHTML = "";
 
             if (denuncias.length === 0) {
-                tbody.innerHTML = "<tr><td colspan='5'>Você ainda não fez nenhuma denúncia.</td></tr>";
+                tbody.innerHTML = "<tr><td colspan='6'>Você ainda não fez nenhuma denúncia.</td></tr>";
                 return;
             }
 
@@ -245,8 +230,14 @@
                                    status === 'Em Andamento' ? 'andamento' : 
                                    status === 'Resolvida' ? 'resolvida' : 'pendente';
                 
+                // Verifica se há foto, senão usa um placeholder
+                const fotoHtml = denuncia.foto 
+                    ? `<img src="${denuncia.foto}" class="img-miniatura" alt="Foto da denúncia">`
+                    : `<i class="fas fa-image" style="font-size: 24px; color: #ccc;"></i>`;
+
                 tr.innerHTML = `
                     <td>${denuncia.id}</td>
+                    <td>${fotoHtml}</td>
                     <td>${denuncia.tipo}</td>
                     <td>${denuncia.endereco.length > 25 ? denuncia.endereco.substring(0, 25) + '...' : denuncia.endereco}</td>
                     <td><span class="status-badge status-${statusClass}">${status}</span></td>
@@ -256,7 +247,6 @@
             });
         }
 
-        // Função para logout
         function fazerLogout() {
             localStorage.removeItem('usuarioLogado');
             window.location.href = '../html/login.html';
