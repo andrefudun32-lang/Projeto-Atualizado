@@ -3,9 +3,9 @@ const mysql = require("mysql2");
 // Configurações da conexão com o banco de dados
 const db = mysql.createConnection({
     host: "localhost",
-    user: "root",           // Usuário padrão do MySQL (XAMPP/Workbench)
-    password: "senacrs",           // Deixe vazio se não definiu senha, ou coloque sua senha real
-    database: "DenunciaPel" // Nome exato definido no seu script SQL
+    user: "root",           
+    password: "",           // Se o seu MySQL tiver senha, coloque-a aqui
+    database: "DenunciaPel" // Nome definido no seu SQL
 });
 
 // Tentativa de conexão
@@ -17,5 +17,4 @@ db.connect((err) => {
     console.log("✅ Conectado ao banco de dados DenunciaPel!");
 });
 
-// Exporta a conexão para ser usada pelo server.js
 module.exports = db;
