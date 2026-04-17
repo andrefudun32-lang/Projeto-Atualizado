@@ -1,70 +1,45 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // 1. Recuperar o usuário logado (ajuste 'usuarioLogado' para a chave que você usa)
     const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
-    const ehFuncionario = usuarioLogado && usuarioLogado.tipo === "funcionario";
+    const ehFuncionario = usuarioLogado && (usuarioLogado.tipo === "funcionario" || usuarioLogado.origem === "funcionario");
 
+    // Busca as denúncias usando a URL completa com /api/
     fetch("http://localhost:3000/api/denuncias")
       .then(res => {
-        if (!res.ok) {
-          throw new Error(`Erro HTTP: ${res.status}`);
-        }
+        if (!res.ok) throw new Error(`Erro HTTP: ${res.status}`);
         return res.json();
       })
       .then(data => {
-        const tbody = document.querySelector("#tabelaDenuncias tbody");
-        const theadTr = document.querySelector("#tabelaDenuncias thead tr");
+        const tbody = document.querySelector("#tabela-denuncias tbody");
+        if (!tbody) return;
 
-        if (!tbody) {
-          console.error("Elemento #tabelaDenuncias tbody não encontrado");
-          return;
-        }
-
-        // 2. Adicionar cabeçalho de "Ações" se for funcionário e ainda não existir
-        if (ehFuncionario && theadTr && !document.querySelector("#col-acoes")) {
-          const th = document.createElement("th");
-          th.id = "col-acoes";
-          th.textContent = "Ações";
-          theadTr.appendChild(th);
-        }
-        
         tbody.innerHTML = "";
   
-        if (!Array.isArray(data)) {
-          console.error("Dados recebidos não são um array:", data);
-          tbody.innerHTML = "<tr><td colspan='7'>Formato de dados inválido</td></tr>";
-          return;
-        }
-  
         if (data.length === 0) {
-          tbody.innerHTML = "<tr><td colspan='8'>Nenhuma denúncia encontrada.</td></tr>";
+          tbody.innerHTML = "<tr><td colspan='9'>Nenhuma denúncia encontrada.</td></tr>";
           return;
         }
   
         data.forEach(denuncia => {
           const tr = document.createElement("tr");
           const status = denuncia.status || 'Pendente';
-          const statusClass = status === 'Pendente' ? 'pendente' : 
-                               status === 'Em Andamento' ? 'andamento' : 
-                               status === 'Resolvida' ? 'resolvida' : 'pendente';
           
-          // Conteúdo base da linha
           let htmlConteudo = `
-            <td>${denuncia.id}</td>
+            <td>#${denuncia.id}</td>
             <td>${denuncia.tipo}</td>
             <td>${denuncia.endereco}</td>
             <td>${denuncia.referencia || "-"}</td>
             <td>${denuncia.descricao}</td>
-            <td><span class="status-badge status-${statusClass}">${status}</span></td>
-            <td>Anônimo</td>
-            <td>${denuncia.foto ? 'Com foto' : 'Sem foto'}</td>
+            <td><span class="status-badge">${status}</span></td>
+            <td>${denuncia.usuario_nome || "Anônimo"}</td>
+            <td>${denuncia.foto ? '✅ Sim' : '❌ Não'}</td>
           `;
 
-          // 3. Se for funcionário, adiciona a célula com o botão de editar
+          // Se for funcionário, adiciona o botão de excluir
           if (ehFuncionario) {
             htmlConteudo += `
               <td>
-                <button class="btn-editar" onclick="abrirEdicao(${denuncia.id})">
-                  <i class="fas fa-edit"></i> Editar
+                <button onclick="excluirDenuncia(${denuncia.id})" style="background: #ff4d4d; color: white; border: none; padding: 5px; cursor: pointer;">
+                  <i class="fas fa-trash"></i>
                 </button>
               </td>
             `;
@@ -73,21 +48,24 @@ document.addEventListener("DOMContentLoaded", () => {
           tr.innerHTML = htmlConteudo;
           tbody.appendChild(tr);
         });
-        
-        console.log(`${data.length} denúncias carregadas com sucesso!`);
       })
       .catch(err => {
-        console.error("Erro ao carregar denúncias:", err);
-        const tbody = document.querySelector("#tabelaDenuncias tbody");
-        if (tbody) {
-          tbody.innerHTML = "<tr><td colspan='7'>Erro ao conectar com o banco de dados.</td></tr>";
-        }
+        console.error("Erro ao carregar:", err);
       });
 });
 
-// 4. Função para lidar com o clique (você pode colocar no js/admin-dashboard.js)
-function abrirEdicao(id) {
-    console.log("Editando denúncia ID:", id);
-    // Aqui você pode abrir um modal ou redirecionar para uma página de edição
-    // Ex: window.location.href = `editar-denuncia.html?id=${id}`;
+// Nova função de exclusão integrada ao backend
+function excluirDenuncia(id) {
+    if (confirm(`Deseja realmente excluir a denúncia #${id}?`)) {
+        fetch(`http://localhost:3000/api/denuncias/${id}`, { method: 'DELETE' })
+        .then(res => {
+            if (!res.ok) throw new Error("Erro ao excluir");
+            return res.json();
+        })
+        .then(data => {
+            alert(data.mensagem);
+            location.reload(); // Atualiza a tabela
+        })
+        .catch(err => alert("Erro ao tentar excluir: " + err.message));
+    }
 }
