@@ -1,96 +1,97 @@
-// 1. Lista de xingamentos
-const palavrasProibidas = ["xingamento1", "palavraimpropria", "termoofensivo"];
+document.addEventListener("DOMContentLoaded", () => {
+    const formulario = document.getElementById("denunciaForm");
 
-function temOfensa(texto) {
-    if (!texto) return false;
-    const textoMinusculo = texto.toLowerCase();
-    return palavrasProibidas.some(palavra => textoMinusculo.includes(palavra.toLowerCase()));
-}
+    if (formulario) {
+        formulario.addEventListener("submit", async (e) => {
+            e.preventDefault();
 
-window.onload = function() {
-    const form = document.querySelector('form');
-    
-    if (!form) {
-        console.error("Erro: Formulário não encontrado!");
-        return;
+            const btnSubmit = document.getElementById("btnSubmit");
+            const btnText = document.getElementById("btn-text");
+            const btnLoading = document.getElementById("btn-loading");
+
+            // Coleta de dados
+            const usuario = JSON.parse(localStorage.getItem("usuarioLogado"));
+            const tipo = document.getElementById("tipoDenuncia").value;
+            const endereco = document.getElementById("endereco").value;
+            const referencia = document.getElementById("referencia").value;
+            const descricao = document.getElementById("descricao").value;
+            const fotoFile = document.getElementById("foto").files[0];
+
+            if (!fotoFile) {
+                alert("Por favor, anexe uma foto.");
+                return;
+            }
+
+            // Início do feedback visual
+            btnText.style.display = "none";
+            btnLoading.style.display = "inline";
+            btnSubmit.disabled = true;
+
+            try {
+                // Converter imagem em Base64
+                const converterParaBase64 = (file) => {
+                    return new Promise((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.readAsDataURL(file);
+                        reader.onload = () => resolve(reader.result);
+                        reader.onerror = (error) => reject(error);
+                    });
+                };
+
+                const base64Foto = await converterParaBase64(fotoFile);
+
+                const dados = {
+                    tipo,
+                    endereco,
+                    referencia,
+                    descricao,
+                    foto: base64Foto,
+                    usuario_id: usuario ? usuario.id : null,
+                    usuario_nome: usuario ? usuario.nome : "Anônimo"
+                };
+
+                const response = await fetch("http://localhost:3000/api/denuncias", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(dados)
+                });
+
+                // Aqui é onde o erro do 'Unexpected token' acontecia se a rota estivesse errada
+                const textoResposta = await response.text();
+                let resultado;
+                
+                try {
+                    resultado = JSON.parse(textoResposta);
+                } catch (e) {
+                    throw new Error("O servidor enviou uma resposta inválida (HTML em vez de JSON). Verifique se o index.js está rodando.");
+                }
+
+                if (response.ok) {
+                    alert("Denúncia enviada com sucesso!");
+                    window.location.href = "inicial-logado.html";
+                } else {
+                    throw new Error(resultado.mensagem || "Erro ao registrar no servidor");
+                }
+
+            } catch (error) {
+                console.error("Erro no envio:", error);
+                alert("Falha ao enviar: " + error.message);
+                
+                // Restaura o botão
+                btnText.style.display = "inline";
+                btnLoading.style.display = "none";
+                btnSubmit.disabled = false;
+            }
+        });
     }
 
-    form.addEventListener('submit', function(event) {
-        event.preventDefault(); 
-        console.log("Iniciando validação e conversão de imagem...");
-
-        const fotoInput = document.getElementById('foto') || document.querySelector('input[type="file"]');
-        const enderecoInput = document.querySelector('input[placeholder*="Rua das Flores"]');
-        const descricaoInput = document.querySelector('textarea');
-        const tipoInput = document.querySelector('select');
-        const referenciaInput = document.querySelector('input[placeholder*="opcional"]');
-
-        // VALIDAÇÃO 1: Foto
-        if (!fotoInput || fotoInput.files.length === 0) {
-            alert("Adicione uma foto da sua denúncia para continuar");
-            return; 
-        }
-
-        // VALIDAÇÃO 2: Xingamentos
-        const conteudoEndereco = enderecoInput ? enderecoInput.value : "";
-        const conteudoDescricao = descricaoInput ? descricaoInput.value : "";
-
-        if (temOfensa(conteudoEndereco) || temOfensa(conteudoDescricao)) {
-            alert("Sua denúncia contém palavras impróprias. Por favor, utilize uma linguagem respeitosa.");
-            return; 
-        }
-
-        // --- NOVA VALIDAÇÃO 3: Verificar se há número no endereço ---
-        const temNumeroNoEndereco = /\d/.test(conteudoEndereco);
-        if (!temNumeroNoEndereco) {
-            alert("⚠️ Por favor, informe o número no campo de endereço (ex: Rua das Flores, 123).");
-            if (enderecoInput) {
-                enderecoInput.focus();
-                enderecoInput.style.borderColor = "red";
-            }
-            return; // Interrompe o envio
-        } else {
-            if (enderecoInput) enderecoInput.style.borderColor = ""; // Reseta a cor se estiver ok
-        }
-
-        // --- PROCESSO DE CONVERSÃO DA IMAGEM ---
-        const leitor = new FileReader();
-        leitor.readAsDataURL(fotoInput.files[0]); 
-
-        leitor.onload = function() {
-            const fotoBase64 = leitor.result;
-
-            const dadosDenuncia = {
-                tipo: tipoInput ? tipoInput.value : "Geral",
-                endereco: conteudoEndereco,
-                referencia: referenciaInput ? referenciaInput.value : "-",
-                descricao: conteudoDescricao,
-                foto: fotoBase64 
-            };
-
-            fetch("http://localhost:3000/api/denuncias", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(dadosDenuncia)
-            })
-            .then(res => {
-                if (!res.ok) {
-                    return res.json().then(err => { throw new Error(err.error || "Erro no servidor"); });
-                }
-                return res.json();
-            })
-            .then(data => {
-                alert("Denúncia criada com sucesso!");
-                window.location.href = "denuncias.html"; 
-            })
-            .catch(err => {
-                console.error("Erro no envio:", err);
-                alert("Falha ao enviar: " + err.message);
-            });
-        };
-
-        leitor.onerror = function() {
-            alert("Erro ao processar a imagem. Tente outro arquivo.");
-        };
-    });
-};
+    // Contador de caracteres
+    const campoDescricao = document.getElementById("descricao");
+    const contador = document.getElementById("char-count");
+    
+    if (campoDescricao && contador) {
+        campoDescricao.addEventListener("input", function() {
+            contador.textContent = this.value.length;
+        });
+    }
+});
