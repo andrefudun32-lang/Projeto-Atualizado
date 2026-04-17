@@ -17,12 +17,23 @@ document.addEventListener("DOMContentLoaded", () => {
             const descricao = document.getElementById("descricao").value;
             const fotoFile = document.getElementById("foto").files[0];
 
+            // --- VALIDAÇÕES ANTES DO ENVIO ---
+
+            // 1. Validar se há número no endereço
+            const temNumero = /\d/.test(endereco);
+            if (!temNumero) {
+                alert("Por favor, informe o número da residência ou local no endereço.");
+                document.getElementById("endereco").focus();
+                return;
+            }
+
+            // 2. Validar foto
             if (!fotoFile) {
                 alert("Por favor, anexe uma foto.");
                 return;
             }
 
-            // Início do feedback visual
+            // Início do feedback visual (Só acontece se passar nas validações acima)
             btnText.style.display = "none";
             btnLoading.style.display = "inline";
             btnSubmit.disabled = true;
@@ -56,14 +67,13 @@ document.addEventListener("DOMContentLoaded", () => {
                     body: JSON.stringify(dados)
                 });
 
-                // Aqui é onde o erro do 'Unexpected token' acontecia se a rota estivesse errada
                 const textoResposta = await response.text();
                 let resultado;
                 
                 try {
                     resultado = JSON.parse(textoResposta);
                 } catch (e) {
-                    throw new Error("O servidor enviou uma resposta inválida (HTML em vez de JSON). Verifique se o index.js está rodando.");
+                    throw new Error("O servidor enviou uma resposta inválida (HTML em vez de JSON). Verifique se o servidor está rodando.");
                 }
 
                 if (response.ok) {
@@ -77,7 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 console.error("Erro no envio:", error);
                 alert("Falha ao enviar: " + error.message);
                 
-                // Restaura o botão
+                // Restaura o botão em caso de erro
                 btnText.style.display = "inline";
                 btnLoading.style.display = "none";
                 btnSubmit.disabled = false;
